@@ -56,7 +56,7 @@ class TwoFactor extends Component
     {
         $enableTwoFactorAuthentication(auth()->user());
 
-        if (! $this->requiresConfirmation) {
+        if ( ! $this->requiresConfirmation) {
             $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
         }
 
@@ -147,7 +147,7 @@ class TwoFactor extends Component
 
         $this->resetErrorBag();
 
-        if (! $this->requiresConfirmation) {
+        if ( ! $this->requiresConfirmation) {
             $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
         }
     }

@@ -4,6 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
+        "test": "clear; ./vendor/bin/pint; php -d memory_limit=1G ./vendor/bin/phpstan analyse ; php artisan test --stop-on-failure",
+        "dirty": "clear; ./vendor/bin/pint; php -d memory_limit=1G ./vendor/bin/phpstan analyse ; php artisan test --dirty --stop-on-failure",
         "dev": "vite"
     },
     "dependencies": {
