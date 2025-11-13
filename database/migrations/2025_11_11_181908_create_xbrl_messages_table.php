@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->uuid('message_uuid')->unique();
+            $table->string('message_description')->nullable();
             $table->string('message_type')->nullable();
             $table->string('message_status')->default('pending');
             $table->longText('message_content');

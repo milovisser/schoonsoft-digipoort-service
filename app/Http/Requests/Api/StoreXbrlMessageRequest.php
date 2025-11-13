@@ -15,7 +15,8 @@ class StoreXbrlMessageRequest extends FormRequest
     {
         return [
             'message_uuid' => ['required', 'string', 'unique:xbrl_messages,message_uuid'],
-            'message_type' => ['nullable', 'string', 'max:255'],
+            'message_type' => ['required', 'string', 'max:255'],
+            'message_description' => ['nullable', 'string', 'max:255'],
             'message_content' => ['required', 'string'],
         ];
     }

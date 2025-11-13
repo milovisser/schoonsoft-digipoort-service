@@ -11,6 +11,7 @@ class XbrlMessage extends Model
     protected $fillable = [
         'user_id',
         'message_uuid',
+        'message_description',
         'message_type',
         'message_status',
         'message_content',

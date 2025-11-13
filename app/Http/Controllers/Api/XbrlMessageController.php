@@ -14,30 +14,43 @@ class XbrlMessageController extends Controller
 {
     public function store(StoreXbrlMessageRequest $request): JsonResponse
     {
-        Log::info('Storing XBRL message', ['request' => $request->all()]);
+        // Debug: Log alle beschikbare request informatie
+        $debugInfo = [
+            'all' => $request->all(),
+            'input' => $request->input(),
+            'content_type' => $request->header('Content-Type'),
+            'method' => $request->method(),
+            'raw_content' => $request->getContent(),
+            'is_json' => $request->isJson(),
+        ];
 
-        /** @var \App\Models\User $user */
+        // Alleen JSON data loggen als het JSON is
+        if ($request->isJson()) {
+            $debugInfo['json'] = $request->json()->all();
+        }
+
+        Log::info('Storing XBRL message', $debugInfo);
+
         $user = $request->user();
+        $validated = $request->validated();
+
         Log::info('User: ' . $user->email);
-        Log::info('Message UUID: ' . $request->validated()['message_uuid']);
-        Log::info('Message Type: ' . $request->validated()['message_type']);
-        Log::info('Message Content: ' . $request->validated()['message_content']);
+        Log::info('message_uuid : ' . $validated['message_uuid']);
+        Log::info('message_description : ' . $validated['message_description']);
 
         $xbrlMessage = XbrlMessage::create([
             'user_id' => $user->id,
-            'message_uuid' => $request->validated()['message_uuid'],
-            'message_type' => $request->validated()['message_type'] ?? null,
+            'message_uuid' => $validated['message_uuid'],
+            'message_type' => $validated['message_type'] ?? null,
+            'message_description' => $validated['message_description'] ?? null,
             'message_status' => XbrlMessageStatus::Pending->value,
-            'message_content' => $request->validated()['message_content'],
+            'message_content' => base64_decode($validated['message_content']),
         ]);
 
         return response()->json([
             'message' => 'XBRL bericht succesvol ontvangen',
             'data' => [
                 'id' => $xbrlMessage->id,
-                'message_uuid' => $xbrlMessage->message_uuid,
-                'status' => $xbrlMessage->message_status,
-                'created_at' => $xbrlMessage->created_at,
             ],
         ], 201);
     }
