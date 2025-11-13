@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('xbrl_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->uuid('message_uuid')->unique();
             $table->string('message_type')->nullable();
             $table->string('message_status')->default('pending');
@@ -25,9 +25,7 @@ return new class extends Migration
             $table->text('error_message')->nullable();
             $table->timestamps();
 
-            $table->index(['tenant_id', 'message_status']);
             $table->index('message_uuid');
-            $table->index('digipoort_message_id');
         });
     }
 

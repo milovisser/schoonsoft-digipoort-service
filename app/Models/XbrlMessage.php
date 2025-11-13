@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class XbrlMessage extends Model
 {
     protected $fillable = [
-        'tenant_id',
+        'user_id',
         'message_uuid',
         'message_type',
         'message_status',
@@ -21,6 +21,11 @@ class XbrlMessage extends Model
         'error_message',
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected function casts(): array
     {
         return [
@@ -28,10 +33,5 @@ class XbrlMessage extends Model
             'sent_at' => 'datetime',
             'processed_at' => 'datetime',
         ];
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
     }
 }

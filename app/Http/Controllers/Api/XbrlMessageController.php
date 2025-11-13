@@ -4,23 +4,26 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreXbrlMessageRequest;
-use App\Models\Tenant;
 use App\Models\XbrlMessage;
 use App\XbrlMessageStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class XbrlMessageController extends Controller
 {
     public function store(StoreXbrlMessageRequest $request): JsonResponse
     {
-        /** @var Tenant $tenant */
-        $tenant = $request->user();
+        Log::info('Storing XBRL message', ['request' => $request->all()]);
 
-        $xbrlMessage = $tenant->xbrlMessages()->create([
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        $xbrlMessage = XbrlMessage::create([
+            'user_id' => $user->id,
             'message_uuid' => $request->validated()['message_uuid'],
             'message_type' => $request->validated()['message_type'] ?? null,
-            'message_status' => XbrlMessageStatus::Pending,
+            'message_status' => XbrlMessageStatus::Pending->value,
             'message_content' => $request->validated()['message_content'],
         ]);
 
@@ -37,11 +40,12 @@ class XbrlMessageController extends Controller
 
     public function show(Request $request, XbrlMessage $xbrlMessage): JsonResponse
     {
-        /** @var Tenant $tenant */
-        $tenant = $request->user();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
 
-        if ($xbrlMessage->tenant_id !== $tenant->id) {
-            abort(404);
+        // Ensure user can only access their own messages
+        if ($xbrlMessage->user_id !== $user->id) {
+            abort(403, 'Je hebt geen toegang tot dit bericht.');
         }
 
         return response()->json([
@@ -62,10 +66,10 @@ class XbrlMessageController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        /** @var Tenant $tenant */
-        $tenant = $request->user();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
 
-        $xbrlMessages = $tenant->xbrlMessages()
+        $xbrlMessages = $user->xbrlMessages()
             ->orderBy('created_at', 'desc')
             ->paginate($request->get('per_page', 15));
 
