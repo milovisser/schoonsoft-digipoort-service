@@ -14,7 +14,7 @@ class StoreXbrlMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message_uuid' => ['required', 'uuid', 'unique:xbrl_messages,message_uuid'],
+            'message_uuid' => ['required', 'string', 'unique:xbrl_messages,message_uuid'],
             'message_type' => ['nullable', 'string', 'max:255'],
             'message_content' => ['required', 'string'],
         ];

@@ -18,6 +18,10 @@ class XbrlMessageController extends Controller
 
         /** @var \App\Models\User $user */
         $user = $request->user();
+        Log::info('User: ' . $user->email);
+        Log::info('Message UUID: ' . $request->validated()['message_uuid']);
+        Log::info('Message Type: ' . $request->validated()['message_type']);
+        Log::info('Message Content: ' . $request->validated()['message_content']);
 
         $xbrlMessage = XbrlMessage::create([
             'user_id' => $user->id,
