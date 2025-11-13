@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Pages\UserIndexPage;
+use App\Livewire\Pages\XbrlMessagesIndexPage;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -19,6 +20,7 @@ Route::view('dashboard', 'dashboard')
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
     Route::get('users', UserIndexPage::class)->name('users.index');
+    Route::get('xbrl-messages', XbrlMessagesIndexPage::class)->name('xbrl-messages.index');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');

@@ -34,4 +34,9 @@ class XbrlMessage extends Model
             'processed_at' => 'datetime',
         ];
     }
+
+    public function getStatusAttribute(): string
+    {
+        return $this->message_status->value;
+    }
 }
